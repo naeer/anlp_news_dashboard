@@ -91,19 +91,12 @@ def set_parameters(keyword):
     return art_response
 
 
-def main():
-    if len(sys.argv) == 2:
-        keyword = sys.argv[1]
-        print(keyword)
-    else:
-        keyword = 'Australia'
-        print(keyword)
-
+def get_articles(keyword):
     param = set_parameters(keyword)
     df = create_df(param)
-    print(df)
+    return df
     # print(df.columns)
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
