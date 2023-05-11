@@ -5,6 +5,7 @@ import pandas as pd
 import requests as r
 from dateutil import parser
 import sys
+import datetime
 
 
 def create_df(art_response):
@@ -45,30 +46,33 @@ def create_df(art_response):
     # Create dataframe
 
     art_body_date = pd.DataFrame(
-        {'date': art_dates,
+        {'source': 'Guardian',
+         'date': art_dates,
          'headline': art_title,
          'article': art_body,
-         'section': art_section,
+         # 'section': art_section,
          'url': art_url
          })
 
-    art_body_date['year_month'] = pd.to_datetime(art_body_date['date']).dt.to_period('M')
+    # art_body_date['year_month'] = pd.to_datetime(art_body_date['date']).dt.to_period('M')
 
-    print(art_body_date)
+    # print(art_body_date)
 
     return art_body_date
 
 
 def set_parameters(keyword):
     guardian_api_key = '231ce917-65b5-4019-b365-c79f213379d1'
-    query_keywords = f'"{keyword}"'  # Delete double quotes if not an exact phrase query (free text)
-    query_fields = 'headline'  # Other popular option body
-    from_date = '2000-01-01'  # 'yyyy,MM,dd'
-    to_date = '2022-12-31'  # 'yyyy,MM,dd'
-    page = '1'  # Page number to extract articles from, can only do one page at a time
+    query_keywords = f'"{keyword}"'
+    query_fields = 'headline'
+    delta = datetime.timedelta(days=29)
+    from_datetime = datetime.datetime.now() - delta
+    from_date = from_datetime.strftime("%Y-%m-%d")
+    to_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    page = '1'  # page#, can only do one page at a time
     page_size = '100'  # up to 200
-    prod_off = 'aus'  # only news from the australia edition
-    order_by = 'newest'  # relevance also available.
+    prod_off = 'aus'
+    order_by = 'newest'
 
     # Call API and generate response with articles
 
@@ -82,7 +86,7 @@ def set_parameters(keyword):
                      f'&order-by={order_by}'
                      f'&api-key={guardian_api_key}')
     art_response = response.json()
-    print(art_response)
+    # print(art_response)
 
     return art_response
 
@@ -98,6 +102,7 @@ def main():
     param = set_parameters(keyword)
     df = create_df(param)
     print(df)
+    # print(df.columns)
 
 
 if __name__ == "__main__":
