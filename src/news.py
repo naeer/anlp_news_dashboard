@@ -53,12 +53,15 @@ class ArticlesFromNewsAPI():
               Method to get the main content of the article
               """
               results = html_content.find(id = 'story-primary')
-              paragraphs = results.find_all("p")
-              paras_list = []
-              for para in paragraphs:
-                     paras_list.append(para.text)
-              story = "\n".join(paras_list)
-              return story
+              if results:
+                     paragraphs = results.find_all("p")
+                     if paragraphs:
+                            paras_list = []
+                            for para in paragraphs:
+                                   paras_list.append(para.text)
+                            story = "\n".join(paras_list)
+                            return story
+              return " "
 
        def get_article_contents_for_all_articles(self, list_article_urls):
               """
@@ -77,20 +80,21 @@ class ArticlesFromNewsAPI():
               """
               resp = self.call_everything_endpoint_of_news_api()
               article_df = self.get_articles_from_json_response(response=resp)
-              article_urls = self.get_list_article_urls(article_df=article_df)
+              if article_df is not None:
+                     article_urls = self.get_list_article_urls(article_df=article_df)
+                     article_stories = self.get_article_contents_for_all_articles(list_article_urls=article_urls)
+                     article_df['full_content'] = article_stories
+                     article_df['source'] = 'news.com.au'
 
-              article_stories = self.get_article_contents_for_all_articles(list_article_urls=article_urls)
-              article_df['full_content'] = article_stories
-              article_df['source'] = 'news.com.au'
-
-              final_article_df = pd.DataFrame({
-                     'source': article_df['source'],
-                     'date': article_df['publishedAt'],
-                     'headline': article_df['title'],
-                     'article': article_df['full_content'],
-                     'url': article_df['url']
-              })
-              return final_article_df
+                     final_article_df = pd.DataFrame({
+                            'source': article_df['source'],
+                            'date': article_df['publishedAt'],
+                            'headline': article_df['title'],
+                            'article': article_df['full_content'],
+                            'url': article_df['url']
+                     })
+                     return final_article_df
+              return None
 
 # if __name__ == "__main__":
 #        resp = call_everything_endpoint_of_news_api(source=source, topic=topic, from_date=from_date)
