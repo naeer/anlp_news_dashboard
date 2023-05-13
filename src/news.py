@@ -3,6 +3,7 @@ import json
 import pandas as pd
 from bs4 import BeautifulSoup
 
+
 class ArticlesFromNewsAPI():
 
        def __init__(self, source, topic, from_date) -> None:

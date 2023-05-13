@@ -63,9 +63,9 @@ def create_df(art_response):
 
 def set_parameters(keyword):
     guardian_api_key = '231ce917-65b5-4019-b365-c79f213379d1'
-    query_keywords = f'"{keyword}"'
+    query_keywords = f'{keyword}'
     query_fields = 'headline'
-    delta = datetime.timedelta(days=29)
+    delta = datetime.timedelta(days=182)
     from_datetime = datetime.datetime.now() - delta
     from_date = from_datetime.strftime("%Y-%m-%d")
     to_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -73,16 +73,18 @@ def set_parameters(keyword):
     page_size = '100'  # up to 200
     prod_off = 'aus'
     order_by = 'newest'
+    section = 'sport'
 
     # Call API and generate response with articles
 
     response = r.get(f'https://content.guardianapis.com/search?q={query_keywords}'
                      f'&query-fields={query_fields}'
                      f'&from-date={from_date}'
+                     #f'&section={section}'
                      f'&to-date={to_date}'
                      f'&page={page}'
                      f'&page-size={page_size}'
-                     f'&production-office={prod_off}'
+                     #f'&production-office={prod_off}'
                      f'&order-by={order_by}'
                      f'&api-key={guardian_api_key}')
     art_response = response.json()
