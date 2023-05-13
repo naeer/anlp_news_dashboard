@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from news import ArticlesFromNewsAPI
 from api import *
-import openai
+#import openai
 import pandas as pd
 
 # Get the current date
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     #     keyword = 'Australia'
     #     print(keyword)
 
-    keywords = ['Australia']
+    keywords = ['facebook','snapchat','instagram','tiktok','twitter']
     # , 'Sydney', 'Melbourne', 'Brisbane', 'NATO', 'Formula1',
     #             'Police', 'Death', 'China', 'USA']
 
@@ -50,13 +50,16 @@ if __name__ == "__main__":
         articlesFromNewsAPI = ArticlesFromNewsAPI(source='news.com.au', topic=keyword, from_date=from_date)
         df1 = articlesFromNewsAPI.get_all_articles_from_last_month()
         if df1 is not None:
-            df = pd.concat([df,df1])
+            df = pd.concat([df, df1])
             print(df1)
         df2 = get_articles(keyword=keyword)
         print(df2)
-        df = pd.concat([df,df2])
+        df = pd.concat([df, df2])
 
-    # df = pd.read_csv('/Users/naeeramin/Documents/UTS - 4th semester/ANLP/AT2/output28.csv')
+        #df.to_csv('/Users/gerar/OneDrive/Escritorio/MDSI/23-04autumn/ANLP/output.csv')
+
+
+
 
     # new_df = df.head(2)
 
@@ -73,5 +76,5 @@ if __name__ == "__main__":
    
 
 
-    df.to_csv('/Users/naeeramin/Documents/UTS - 4th semester/ANLP/AT2/output30.csv')
+    #df.to_csv('/Users/naeeramin/Documents/UTS - 4th semester/ANLP/AT2/output30.csv')
 
