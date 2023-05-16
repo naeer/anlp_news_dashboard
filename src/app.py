@@ -28,7 +28,6 @@ def app():
 
     # Add columns for the number of words and sentences in each article
     app_df['num_words'] = app_df['article_wordtok'].apply(lambda x: count_words(x.split()))
-    app_df['num_sentences'] = app_df['article_sentok'].apply(lambda x: count_sentences(x.split()))
     app_df['reading_time_mins'] = app_df['num_words'].apply(lambda x: calculate_reading_time(x))
 
     # Create a selectbox for the user to filter by keyword
@@ -49,7 +48,10 @@ def app():
                          app_df['headline'].str.contains(selected_headline, case=False)]
 
     # Display the filtered data frame
-    st.write(filtered_df)
+    st.write(filtered_df[['keyword', 'source', 'date','headline','url','chat_gpt_summary',
+                          'article_sentiment_label', 'named_entities',  'top_entities_with_count',  'top_words',
+                          'num_words', 'reading_time_mins']])
+
 
     # Plot sentiment barchart
     st.header('Sentiment Analysis plot')
@@ -144,6 +146,8 @@ def app():
 
     # Display the chart using Streamlit
     st.altair_chart(chart, use_container_width=True)
+
+    #app_df.to_csv('final_app_data_def.csv', index=False, encoding='utf-8')
 
 
 if __name__ == "__main__":
